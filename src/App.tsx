@@ -17,7 +17,7 @@ import {
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Dashboard, Menu } from '@mui/icons-material';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import { Home } from './features';
+import { Home, Webhooks } from './features';
 
 export const THEME = createTheme({
   palette: {
@@ -142,7 +142,7 @@ function App() {
               <ListItem
                 button
                 onClick={() => {
-                  navigate('/');
+                  navigate('/webhooks');
 
                   if (isMobile) {
                     setDrawerOpen(false);
@@ -152,7 +152,7 @@ function App() {
                 <ListItemIcon>
                   <Dashboard />
                 </ListItemIcon>
-                <ListItemText primary="Four" />
+                <ListItemText primary="Webhooks" />
               </ListItem>
               <ListItem
                 button
@@ -239,6 +239,7 @@ function App() {
           <Toolbar />
           <Routes>
             <Route element={<Home></Home>} path="/"></Route>
+            <Route element={<Webhooks></Webhooks>} path="/webhooks"></Route>
           </Routes>
         </Box>
       </Box>
