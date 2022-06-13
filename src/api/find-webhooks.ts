@@ -3,7 +3,7 @@ import { db } from '../firebase';
 import { Webhook } from '../types';
 
 export async function findWebhooks(): Promise<Array<Webhook>> {
-  const querySnapshot = await getDocs(query(collection(db, 'documents')));
+  const querySnapshot = await getDocs(query(collection(db, 'webhooks')));
 
   const documents: Array<Webhook> = querySnapshot.docs.map((x) => {
     return {
