@@ -1,7 +1,5 @@
 export type Referrer = {
-  code: string;
+  createdAt: string;
 
   id: string;
-
-  key: string;
 };

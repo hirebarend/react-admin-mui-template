@@ -17,7 +17,7 @@ import {
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Dashboard, Menu } from '@mui/icons-material';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import { Home, Webhooks } from './features';
+import { Customers, CustomersView, Home, Referrers, Webhooks } from './features';
 
 export const THEME = createTheme({
   palette: {
@@ -104,12 +104,12 @@ function App() {
                 <ListItemIcon>
                   <Dashboard />
                 </ListItemIcon>
-                <ListItemText primary="One" />
+                <ListItemText primary="Dashboard" />
               </ListItem>
               <ListItem
                 button
                 onClick={() => {
-                  navigate('/');
+                  navigate('/referrers');
 
                   if (isMobile) {
                     setDrawerOpen(false);
@@ -119,7 +119,22 @@ function App() {
                 <ListItemIcon>
                   <Dashboard />
                 </ListItemIcon>
-                <ListItemText primary="Two" />
+                <ListItemText primary="Referrers" />
+              </ListItem>
+              <ListItem
+                button
+                onClick={() => {
+                  navigate('/customers');
+
+                  if (isMobile) {
+                    setDrawerOpen(false);
+                  }
+                }}
+              >
+                <ListItemIcon>
+                  <Dashboard />
+                </ListItemIcon>
+                <ListItemText primary="Customers" />
               </ListItem>
               <ListItem
                 button
@@ -215,7 +230,7 @@ function App() {
                 <ListItemIcon>
                   <Dashboard />
                 </ListItemIcon>
-                <ListItemText primary="Eight" />
+                <ListItemText primary="API docs" />
               </ListItem>
               <ListItem
                 button
@@ -230,7 +245,7 @@ function App() {
                 <ListItemIcon>
                   <Dashboard />
                 </ListItemIcon>
-                <ListItemText primary="Nine" />
+                <ListItemText primary="Tell a friend" />
               </ListItem>
             </List>
           </Box>
@@ -239,6 +254,9 @@ function App() {
           <Toolbar />
           <Routes>
             <Route element={<Home></Home>} path="/"></Route>
+            <Route element={<Customers></Customers>} path="/customers"></Route>
+            <Route element={<CustomersView></CustomersView>} path="/customers/:id"></Route>
+            <Route element={<Referrers></Referrers>} path="/referrers"></Route>
             <Route element={<Webhooks></Webhooks>} path="/webhooks"></Route>
           </Routes>
         </Box>

@@ -1,7 +1,9 @@
 export type Conversion = {
   createdAt: string;
 
-  key: string;
+  entity: string;
 
   type: string;
+
+  value: number;
 };

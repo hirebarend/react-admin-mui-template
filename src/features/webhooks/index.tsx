@@ -36,7 +36,7 @@ export function Webhooks() {
             mauris a libero interdum tincidunt sed et mi.
           </Typography>
         </Box>
-        <Button variant="outlined">Create webhook</Button>
+        <Button variant="contained">Create webhook</Button>
       </Stack>
 
       <TableContainer component={Paper} sx={{ marginY: '1rem' }}>
