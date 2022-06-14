@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
+import moment from 'moment';
 import {
   Box,
   Button,
@@ -8,14 +9,21 @@ import {
   Grid,
   Paper,
   Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   TextField,
   Typography,
 } from '@mui/material';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
-import { findCustomersMock } from '../../api';
+import { findConversionsMock, findCustomersMock } from '../../api';
 // import { Customer } from '../../types';
 import { Loader } from '../../components';
+import { Conversion } from '../../types';
 
 export function CustomersView() {
   const { user } = useAuth0();
@@ -32,7 +40,18 @@ export function CustomersView() {
     }
   );
 
-  if (!useQueryResultCustomer.data) {
+  const useQueryResultConversions = useQuery(
+    ['findConversions', useQueryResultCustomer.data?.emailAddress],
+    async () =>
+      await findConversionsMock(
+        useQueryResultCustomer.data?.emailAddress || ''
+      ),
+    {
+      enabled: useQueryResultCustomer.data ? true : false,
+    }
+  );
+
+  if (!useQueryResultConversions.data || !useQueryResultCustomer.data) {
     return <Loader></Loader>;
   }
 
@@ -107,6 +126,42 @@ export function CustomersView() {
           </Grid>
         </Box>
       </Paper>
+
+      <Typography component="div" gutterBottom variant="h5">
+        Conversions
+      </Typography>
+
+      <TableContainer component={Paper} sx={{ marginY: '1rem' }}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Campaign</TableCell>
+              <TableCell>Referrer</TableCell>
+              <TableCell>Type</TableCell>
+              <TableCell>Value</TableCell>
+              <TableCell>Created At</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {useQueryResultConversions.data?.map(
+              (x: Conversion, index: number) => (
+                <TableRow
+                  key={index}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell>
+                    {x.campaign.name} ({x.campaign.code})
+                  </TableCell>
+                  <TableCell>{x.campaign.referrer.id}</TableCell>
+                  <TableCell>{x.type}</TableCell>
+                  <TableCell>{x.value}</TableCell>
+                  <TableCell>{moment(x.createdAt).format('llll')}</TableCell>
+                </TableRow>
+              )
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Container>
   );
 }

@@ -15,6 +15,8 @@ const campaign: Campaign = {
   id: 'de66f180-1ca8-4c8b-bad8-ba147fa2cb74',
 
   name: 'Campaign 1',
+
+  referrer,
 };
 
 const customer: Customer = {
@@ -28,6 +30,8 @@ const customer: Customer = {
 };
 
 const conversion: Conversion = {
+  campaign,
+
   createdAt: new Date().toISOString(),
 
   entity: 'john.smith@example.com',

@@ -17,6 +17,7 @@ export async function findWebhooks(): Promise<Array<Webhook>> {
 
 export async function findWebhooksMock(): Promise<Array<Webhook>> {
   return [
+    ...(await findWebhooks()),
     {
       id: '486405b4-65b0-470d-b141-1cf031a187bb',
       name: 'httpbin',

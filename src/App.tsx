@@ -17,17 +17,24 @@ import {
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Dashboard, Menu } from '@mui/icons-material';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import { Customers, CustomersView, Home, Referrers, Webhooks } from './features';
+import {
+  Customers,
+  CustomersView,
+  Home,
+  Referrers,
+  Webhooks,
+  WebhooksCreate,
+} from './features';
 
 export const THEME = createTheme({
-  palette: {
-    primary: {
-      main: '#7849ff',
-    },
-    secondary: {
-      main: '#212124',
-    },
-  },
+  // palette: {
+  //   primary: {
+  //     main: '#7849ff',
+  //   },
+  //   secondary: {
+  //     main: '#212124',
+  //   },
+  // },
   typography: {
     fontFamily: ['Inter'].join(','),
   },
@@ -136,21 +143,6 @@ function App() {
                 </ListItemIcon>
                 <ListItemText primary="Customers" />
               </ListItem>
-              <ListItem
-                button
-                onClick={() => {
-                  navigate('/');
-
-                  if (isMobile) {
-                    setDrawerOpen(false);
-                  }
-                }}
-              >
-                <ListItemIcon>
-                  <Dashboard />
-                </ListItemIcon>
-                <ListItemText primary="Three" />
-              </ListItem>
             </List>
             <Divider />
             <List>
@@ -169,54 +161,9 @@ function App() {
                 </ListItemIcon>
                 <ListItemText primary="Webhooks" />
               </ListItem>
-              <ListItem
-                button
-                onClick={() => {
-                  navigate('/');
-
-                  if (isMobile) {
-                    setDrawerOpen(false);
-                  }
-                }}
-              >
-                <ListItemIcon>
-                  <Dashboard />
-                </ListItemIcon>
-                <ListItemText primary="Five" />
-              </ListItem>
-              <ListItem
-                button
-                onClick={() => {
-                  navigate('/');
-
-                  if (isMobile) {
-                    setDrawerOpen(false);
-                  }
-                }}
-              >
-                <ListItemIcon>
-                  <Dashboard />
-                </ListItemIcon>
-                <ListItemText primary="Six" />
-              </ListItem>
             </List>
             <Divider />
             <List>
-              <ListItem
-                button
-                onClick={() => {
-                  navigate('/');
-
-                  if (isMobile) {
-                    setDrawerOpen(false);
-                  }
-                }}
-              >
-                <ListItemIcon>
-                  <Dashboard />
-                </ListItemIcon>
-                <ListItemText primary="Seven" />
-              </ListItem>
               <ListItem
                 button
                 onClick={() => {
@@ -248,6 +195,24 @@ function App() {
                 <ListItemText primary="Tell a friend" />
               </ListItem>
             </List>
+            <Divider />
+            <List>
+              <ListItem
+                button
+                onClick={() => {
+                  navigate('/');
+
+                  if (isMobile) {
+                    setDrawerOpen(false);
+                  }
+                }}
+              >
+                <ListItemIcon>
+                  <Dashboard />
+                </ListItemIcon>
+                <ListItemText primary="Sign out" />
+              </ListItem>
+            </List>
           </Box>
         </Drawer>
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
@@ -255,9 +220,16 @@ function App() {
           <Routes>
             <Route element={<Home></Home>} path="/"></Route>
             <Route element={<Customers></Customers>} path="/customers"></Route>
-            <Route element={<CustomersView></CustomersView>} path="/customers/:id"></Route>
+            <Route
+              element={<CustomersView></CustomersView>}
+              path="/customers/:id"
+            ></Route>
             <Route element={<Referrers></Referrers>} path="/referrers"></Route>
             <Route element={<Webhooks></Webhooks>} path="/webhooks"></Route>
+            <Route
+              element={<WebhooksCreate></WebhooksCreate>}
+              path="/webhooks/create"
+            ></Route>
           </Routes>
         </Box>
       </Box>

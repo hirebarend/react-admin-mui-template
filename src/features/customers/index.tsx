@@ -78,7 +78,7 @@ export function Customers() {
                     <TableCell>
                       {x.firstName} {x.lastName}
                     </TableCell>
-                    <TableCell>
+                    <TableCell align="right">
                       <Button
                         onClick={() => navigate(`/customers/${x.id}`)}
                         variant="outlined"
