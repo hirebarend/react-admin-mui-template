@@ -14,8 +14,9 @@ import {
 import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import { Webhook } from '../../types';
 import { createWebhook } from '../../api';
+import { getTenantId } from '../../functions';
+import { Webhook } from '../../types';
 
 export function WebhooksCreate() {
   const { user } = useAuth0();
@@ -30,7 +31,7 @@ export function WebhooksCreate() {
 
   const useMutationResult = useMutation(
     [],
-    (webhook: Webhook) => createWebhook(user?.sub || '', webhook),
+    (webhook: Webhook) => createWebhook(getTenantId(user), webhook),
     {
       onSuccess: () => navigate('/webhooks'),
     }
@@ -49,7 +50,7 @@ export function WebhooksCreate() {
             mauris a libero interdum tincidunt sed et mi.
           </Typography>
         </Box>
-        <Button onClick={() => navigate('/webhooks')} variant="outlined">
+        <Button onClick={() => navigate('/app/webhooks')} variant="outlined">
           Back to webhooks
         </Button>
       </Stack>

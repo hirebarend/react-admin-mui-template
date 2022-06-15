@@ -17,8 +17,9 @@ import {
 import { useMutation, useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { deleteWebhook, findWebhooks } from '../../api';
-import { Webhook } from '../../types';
 import { ConfirmationDialog } from '../../components';
+import { getTenantId } from '../../functions';
+import { Webhook } from '../../types';
 
 export function Webhooks() {
   const { user } = useAuth0();
@@ -26,8 +27,8 @@ export function Webhooks() {
   const navigate = useNavigate();
 
   const useQueryResult = useQuery(
-    ['findWebhooks', user?.sub],
-    async () => await findWebhooks(user?.sub || ''),
+    ['findWebhooks', getTenantId(user)],
+    async () => await findWebhooks(getTenantId(user)),
     {
       enabled: user ? true : false,
     }
@@ -35,7 +36,7 @@ export function Webhooks() {
 
   const useMutationResult = useMutation(
     [],
-    (webhook: Webhook) => deleteWebhook(user?.sub || '', webhook.id),
+    (webhook: Webhook) => deleteWebhook(getTenantId(user), webhook.id),
     {
       onSuccess: () => useQueryResult.refetch(),
     }
@@ -60,7 +61,7 @@ export function Webhooks() {
             </Typography>
           </Box>
           <Button
-            onClick={() => navigate('/webhooks/create')}
+            onClick={() => navigate('/app/webhooks/create')}
             variant="contained"
           >
             Create webhook

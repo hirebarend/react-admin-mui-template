@@ -11,7 +11,7 @@ import { findCustomerByEmailAddress } from './find-customer';
 import { findReferrer } from './find-referrer';
 
 export async function createTestData() {
-  const tenantId: string = 'google-oauth2|102857191578298947818';
+  const tenantId: string = 'f8bda464edc9b041ad311e5806c24475';
 
   let referrer: Referrer | null = await findReferrer(tenantId, 'c3bdcad669c0');
 
@@ -34,7 +34,7 @@ export async function createTestData() {
   }
 
   const response = await axios.get(
-    'https://randomuser.me/api?nat=gb&results=10'
+    'https://randomuser.me/api?nat=gb&results=1'
   );
 
   for (const x of response.data.results) {
@@ -56,7 +56,7 @@ export async function createTestData() {
         createdAt: new Date().toISOString(),
         createdAtUnix: new Date().getTime() / 1000,
         entity: customer.id,
-        id: '',
+        id: '6e278fd8-562e-4435-8a9e-54c238bcd980',
         type: 'sign_up',
       });
     }
@@ -78,3 +78,5 @@ export async function deleteAllCollections() {
 // deleteAllCollections().then(() => createTestData());
 
 // createTestData();
+
+// deleteAllCollections();

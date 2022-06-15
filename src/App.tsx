@@ -1,32 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import {
-  AppBar,
-  Box,
-  CssBaseline,
-  Divider,
-  Drawer,
-  IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Toolbar,
-  Typography,
-} from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Dashboard, Menu } from '@mui/icons-material';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import {
+  AppRoute,
   Customers,
   CustomersView,
   Home,
-  Portal,
   Referrers,
   Webhooks,
   WebhooksCreate,
 } from './features';
-import { APP } from './configuration';
+import { getApiClient } from './api-client';
 
 // https://coolors.co/6210cc
 
@@ -45,214 +30,47 @@ export const THEME = createTheme({
 } as any);
 
 function App() {
-  const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
+  const { user } = useAuth0();
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    (async () => {
+      if (user && user.email && user.family_name && user.given_name) {
+        const tenantId: string = 'f8bda464edc9b041ad311e5806c24475';
 
-  const [drawerOpen, setDrawerOpen] = useState(false);
+        const apiClient = await getApiClient(tenantId);
 
-  const isMobile = window.screen.width < 576;
+        const campaignCode: string = 'TWDJ1';
 
-  const drawerWidth: number | undefined = isMobile
-    ? undefined
-    : window.screen.width / 5;
-
-  if (!isLoading && !isAuthenticated) {
-    loginWithRedirect();
-
-    return <></>;
-  }
+        await apiClient.createConversion(
+          campaignCode,
+          user.given_name,
+          user.family_name,
+          user.email,
+          'sign_up'
+        );
+      }
+    })();
+  }, [user]);
 
   return (
     <ThemeProvider theme={THEME}>
-      <Box sx={{ display: 'flex' }}>
-        <CssBaseline />
-        <AppBar
-          position="fixed"
-          sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        >
-          <Toolbar>
-            <IconButton
-              aria-label="menu"
-              color="inherit"
-              edge="start"
-              onClick={() => setDrawerOpen(!drawerOpen)}
-              size="large"
-              sx={{ marginRight: 2 }}
-            >
-              <Menu />
-            </IconButton>
-            <Typography component="div" noWrap variant="h6">
-              {APP.name}
-            </Typography>
-          </Toolbar>
-        </AppBar>
-        <Drawer
-          open={drawerOpen}
-          variant={isMobile ? 'temporary' : 'permanent'}
-          sx={{
-            width: drawerWidth,
-            flexShrink: 0,
-            ['& .MuiDrawer-paper']: {
-              width: drawerWidth,
-              boxSizing: 'border-box',
-            },
-          }}
-        >
-          <Toolbar />
-          <Box sx={{ overflow: 'auto' }}>
-            <List>
-              <ListItem
-                button
-                onClick={() => {
-                  navigate('/');
-
-                  if (isMobile) {
-                    setDrawerOpen(false);
-                  }
-                }}
-              >
-                <ListItemIcon>
-                  <Dashboard />
-                </ListItemIcon>
-                <ListItemText primary="Dashboard" />
-              </ListItem>
-              <ListItem
-                button
-                onClick={() => {
-                  navigate('/referrers');
-
-                  if (isMobile) {
-                    setDrawerOpen(false);
-                  }
-                }}
-              >
-                <ListItemIcon>
-                  <Dashboard />
-                </ListItemIcon>
-                <ListItemText primary="Referrers" />
-              </ListItem>
-              <ListItem
-                button
-                onClick={() => {
-                  navigate('/customers');
-
-                  if (isMobile) {
-                    setDrawerOpen(false);
-                  }
-                }}
-              >
-                <ListItemIcon>
-                  <Dashboard />
-                </ListItemIcon>
-                <ListItemText primary="Customers" />
-              </ListItem>
-              <ListItem
-                button
-                onClick={() => {
-                  navigate('/rewards');
-
-                  if (isMobile) {
-                    setDrawerOpen(false);
-                  }
-                }}
-              >
-                <ListItemIcon>
-                  <Dashboard />
-                </ListItemIcon>
-                <ListItemText primary="Rewards" />
-              </ListItem>
-            </List>
-            <Divider />
-            <List>
-              <ListItem
-                button
-                onClick={() => {
-                  navigate('/webhooks');
-
-                  if (isMobile) {
-                    setDrawerOpen(false);
-                  }
-                }}
-              >
-                <ListItemIcon>
-                  <Dashboard />
-                </ListItemIcon>
-                <ListItemText primary="Webhooks" />
-              </ListItem>
-            </List>
-            <Divider />
-            <List>
-              <ListItem
-                button
-                onClick={() => {
-                  navigate('/');
-
-                  if (isMobile) {
-                    setDrawerOpen(false);
-                  }
-                }}
-              >
-                <ListItemIcon>
-                  <Dashboard />
-                </ListItemIcon>
-                <ListItemText primary="API docs" />
-              </ListItem>
-              <ListItem
-                button
-                onClick={() => {
-                  navigate('/');
-
-                  if (isMobile) {
-                    setDrawerOpen(false);
-                  }
-                }}
-              >
-                <ListItemIcon>
-                  <Dashboard />
-                </ListItemIcon>
-                <ListItemText primary="Refer a friend" />
-              </ListItem>
-            </List>
-            <Divider />
-            <List>
-              <ListItem
-                button
-                onClick={() => {
-                  navigate('/');
-
-                  if (isMobile) {
-                    setDrawerOpen(false);
-                  }
-                }}
-              >
-                <ListItemIcon>
-                  <Dashboard />
-                </ListItemIcon>
-                <ListItemText primary="Sign out" />
-              </ListItem>
-            </List>
-          </Box>
-        </Drawer>
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-          <Toolbar />
-          <Routes>
-            <Route element={<Home></Home>} path="/"></Route>
-            <Route element={<Customers></Customers>} path="/customers"></Route>
-            <Route
-              element={<CustomersView></CustomersView>}
-              path="/customers/:id"
-            ></Route>
-            <Route element={<Portal></Portal>} path="/portal"></Route>
-            <Route element={<Referrers></Referrers>} path="/referrers"></Route>
-            <Route element={<Webhooks></Webhooks>} path="/webhooks"></Route>
-            <Route
-              element={<WebhooksCreate></WebhooksCreate>}
-              path="/webhooks/create"
-            ></Route>
-          </Routes>
-        </Box>
-      </Box>
+      <Routes>
+        <Route element={<>Hello World</>} path="/"></Route>
+        <Route element={<AppRoute></AppRoute>} path="/app">
+          <Route element={<Home></Home>} path=""></Route>
+          <Route element={<Customers></Customers>} path="customers"></Route>
+          <Route
+            element={<CustomersView></CustomersView>}
+            path="customers/:id"
+          ></Route>
+          <Route element={<Referrers></Referrers>} path="referrers"></Route>
+          <Route element={<Webhooks></Webhooks>} path="webhooks"></Route>
+          <Route
+            element={<WebhooksCreate></WebhooksCreate>}
+            path="webhooks/create"
+          ></Route>
+        </Route>
+      </Routes>
     </ThemeProvider>
   );
 }

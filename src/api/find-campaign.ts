@@ -27,17 +27,3 @@ export async function findCampaignByCode(
 
   return campaigns[0];
 }
-
-export async function findTenantIdByCampaignCode(
-  code: string
-): Promise<string | null> {
-  const querySnapshot = await getDocs(
-    query(collection(db, 'campaigns'), where('code', '==', code))
-  );
-
-  if (querySnapshot.empty) {
-    return null;
-  }
-
-  return querySnapshot.docs[0].data().tenantId;
-}

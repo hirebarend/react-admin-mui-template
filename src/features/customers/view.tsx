@@ -23,6 +23,7 @@ import { useParams } from 'react-router-dom';
 import { findConversionsByEntity, findCustomer } from '../../api';
 // import { Customer } from '../../types';
 import { Loader } from '../../components';
+import { getTenantId } from '../../functions';
 import { Conversion } from '../../types';
 
 export function CustomersView() {
@@ -32,17 +33,21 @@ export function CustomersView() {
 
   const useQueryResultCustomer = useQuery(
     ['findCustomer', params.id],
-    async () => await findCustomer(user?.sub || '', params.id as string),
+    async () => await findCustomer(getTenantId(user), params.id as string),
     {
       enabled: user ? true : false,
     }
   );
 
   const useQueryResultConversions = useQuery(
-    ['findConversions', user?.sub, useQueryResultCustomer.data?.emailAddress],
+    [
+      'findConversions',
+      getTenantId(user),
+      useQueryResultCustomer.data?.emailAddress,
+    ],
     async () =>
       await findConversionsByEntity(
-        user?.sub || '',
+        getTenantId(user),
         useQueryResultCustomer.data?.id || ''
       ),
     {

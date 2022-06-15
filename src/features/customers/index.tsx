@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { findCustomers } from '../../api';
 import { Customer } from '../../types';
 import { Loader } from '../../components';
+import { getTenantId } from '../../functions';
 
 export function Customers() {
   const { user } = useAuth0();
@@ -27,7 +28,7 @@ export function Customers() {
 
   const useQueryResultCustomers = useQuery(
     'findCustomers',
-    async () => await findCustomers(user?.sub || ''),
+    async () => await findCustomers(getTenantId(user)),
     {
       enabled: user ? true : false,
     }
@@ -80,7 +81,7 @@ export function Customers() {
                     </TableCell>
                     <TableCell align="right">
                       <Button
-                        onClick={() => navigate(`/customers/${x.id}`)}
+                        onClick={() => navigate(`/app/customers/${x.id}`)}
                         variant="outlined"
                       >
                         View

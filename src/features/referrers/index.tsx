@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import { useQuery } from 'react-query';
 import { findReferrers } from '../../api';
+import { getTenantId } from '../../functions';
 import { Referrer } from '../../types';
 import { Loader } from '../../components';
 
@@ -25,7 +26,7 @@ export function Referrers() {
 
   const useQueryResultReferrers = useQuery(
     'findReferrers',
-    async () => await findReferrers(user?.sub || ''),
+    async () => await findReferrers(getTenantId(user)),
     {
       enabled: user ? true : false,
     }
