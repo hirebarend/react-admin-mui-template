@@ -1,6 +1,6 @@
 {
-  "short_name": "My App",
-  "name": "My App",
+  "short_name": "Referral Stack",
+  "name": "Referral Stack",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +20,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#007bff",
+  "theme_color": "#6210cc",
   "background_color": "#ffffff"
 }

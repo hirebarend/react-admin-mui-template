@@ -6,12 +6,10 @@ export async function createReferrer(
   tenantId: string,
   referrer: Referrer
 ): Promise<Referrer> {
-  const documentReference = await addDoc(collection(db, 'referrers'), {
+  await addDoc(collection(db, 'referrers'), {
     ...referrer,
     tenantId,
   });
-
-  referrer.id = documentReference.id;
 
   return referrer;
 }

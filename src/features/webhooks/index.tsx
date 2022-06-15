@@ -26,8 +26,11 @@ export function Webhooks() {
   const navigate = useNavigate();
 
   const useQueryResult = useQuery(
-    'findWebhooks',
-    async () => await findWebhooks()
+    ['findWebhooks', user?.sub],
+    async () => await findWebhooks(user?.sub || ''),
+    {
+      enabled: user ? true : false,
+    }
   );
 
   const useMutationResult = useMutation(

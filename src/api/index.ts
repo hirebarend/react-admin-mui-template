@@ -1,3 +1,4 @@
+export * from './count-conversions';
 export * from './create-campaign';
 export * from './create-conversion';
 export * from './create-test-data';
@@ -12,3 +13,4 @@ export * from './find-customers';
 export * from './find-referrer';
 export * from './find-referrers';
 export * from './find-webhooks';
+export * from './get-portal-state';

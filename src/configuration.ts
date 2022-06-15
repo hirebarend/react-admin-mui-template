@@ -1,6 +1,11 @@
 /* eslint-disable no-undef */
 
 export const APP = {
+  meta: {
+    description:
+      'A referral program will be your best channel for acquiring new customers. Referral Stack is trusted by the world’s fastest growing SAAS enterprises.',
+    title: 'Referral Stack - Get more out of every customer',
+  },
   name: 'Referral Stack',
 };
 

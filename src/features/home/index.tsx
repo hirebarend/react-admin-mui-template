@@ -27,7 +27,7 @@ export function Home() {
     labels,
     datasets: [
       {
-        backgroundColor: '#9c27b0',
+        backgroundColor: '#a170e0',
         data: [15, 10, 18, 22, 13, 18, 15],
         label: '',
       },

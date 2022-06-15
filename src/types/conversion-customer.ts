@@ -1,11 +1,12 @@
 import { Campaign } from './campaign';
+import { Customer } from './customer';
 
-export type Conversion = {
+export type ConversionCustomer = {
   campaign: Campaign;
 
   createdAt: string;
 
-  createdAtUnix: number;
+  customer: Customer | null;
 
   id: string;
 

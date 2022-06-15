@@ -20,7 +20,7 @@ import {
 } from '@mui/material';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
-import { findConversions, findCustomer } from '../../api';
+import { findConversionsByEntity, findCustomer } from '../../api';
 // import { Customer } from '../../types';
 import { Loader } from '../../components';
 import { Conversion } from '../../types';
@@ -29,8 +29,6 @@ export function CustomersView() {
   const { user } = useAuth0();
 
   const params = useParams();
-
-  console.log(params);
 
   const useQueryResultCustomer = useQuery(
     ['findCustomer', params.id],
@@ -43,7 +41,7 @@ export function CustomersView() {
   const useQueryResultConversions = useQuery(
     ['findConversions', user?.sub, useQueryResultCustomer.data?.emailAddress],
     async () =>
-      await findConversions(
+      await findConversionsByEntity(
         user?.sub || '',
         useQueryResultCustomer.data?.id || ''
       ),

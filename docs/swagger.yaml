@@ -24,12 +24,42 @@ tags:
   - name: rewards
     description: Create, retrieve, update and delete rewards
 paths:
+  /campaigns/{code}:
+    get:
+      tags:
+        - campaigns
+      summary: Retrieve a campaign
+      operationId: campaigns-retrieve-a-campaign
+      parameters:
+        - name: authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+        400:
+          description: Bad Request
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
   /referrer:
     get:
       tags:
         - referrers
       summary: Retrieve referrers
-      operationId: retrieve-referrers
+      operationId: -referrers-retrieve-referrers
       parameters:
         - name: authorization
           in: header
@@ -42,9 +72,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Referrer'
+                $ref: '#/components/schemas/Referrer'
         400:
           description: Bad Request
           content: {}
@@ -55,7 +83,7 @@ paths:
       tags:
         - referrers
       summary: Create a referrer
-      operationId: create-a-referrer
+      operationId: -referrerscreate-a-referrer
       parameters:
         - name: authorization
           in: header
@@ -86,8 +114,8 @@ paths:
     get:
       tags:
         - referrers
-      summary: Retrieve a referrer
-      operationId: retrieve-a-referrer
+      summary: -Retrieve a referrer
+      operationId: referrers-retrieve-a-referrer
       parameters:
         - name: authorization
           in: header
@@ -117,7 +145,7 @@ paths:
       tags:
         - campaigns
       summary: Retrieve campaigns
-      operationId: retrieve-campaigns
+      operationId: campaigns-retrieve-campaigns
       parameters:
         - name: authorization
           in: header
@@ -148,7 +176,7 @@ paths:
       tags:
         - campaigns
       summary: Create a campaign
-      operationId: create-a-campaign
+      operationId: campaigns-create-a-campaign
       parameters:
         - name: authorization
           in: header
@@ -185,7 +213,7 @@ paths:
       tags:
         - campaigns
       summary: Retrieve a campaign
-      operationId: retrieve-a-campaign
+      operationId: campaigns-retrieve-a-campaign
       parameters:
         - name: authorization
           in: header
@@ -219,7 +247,7 @@ paths:
       tags:
         - campaigns
       summary: Update a campaign
-      operationId: update-a-campaign
+      operationId: campaigns-update-a-campaign
       parameters:
         - name: authorization
           in: header
@@ -261,7 +289,7 @@ paths:
       tags:
         - conversions
       summary: Create a conversion
-      operationId: create-a-conversion
+      operationId: -conversionscreate-a-conversion
       parameters:
         - name: authorization
           in: header

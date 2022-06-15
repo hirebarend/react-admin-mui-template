@@ -34,6 +34,8 @@ const conversion: Conversion = {
 
   createdAt: new Date().toISOString(),
 
+  createdAtUnix: new Date().getTime() / 1000,
+
   entity: 'john.smith@example.com',
 
   id: 'de66f180-1ca8-4c8b-bad8-ba147fa2cb74',

@@ -21,21 +21,24 @@ import {
   Customers,
   CustomersView,
   Home,
+  Portal,
   Referrers,
   Webhooks,
   WebhooksCreate,
 } from './features';
 import { APP } from './configuration';
 
+// https://coolors.co/6210cc
+
 export const THEME = createTheme({
-  // palette: {
-  //   primary: {
-  //     main: '#7849ff',
-  //   },
-  //   secondary: {
-  //     main: '#212124',
-  //   },
-  // },
+  palette: {
+    primary: {
+      main: '#6210cc',
+    },
+    secondary: {
+      main: '#10cb61',
+    },
+  },
   typography: {
     fontFamily: ['Inter'].join(','),
   },
@@ -240,6 +243,7 @@ function App() {
               element={<CustomersView></CustomersView>}
               path="/customers/:id"
             ></Route>
+            <Route element={<Portal></Portal>} path="/portal"></Route>
             <Route element={<Referrers></Referrers>} path="/referrers"></Route>
             <Route element={<Webhooks></Webhooks>} path="/webhooks"></Route>
             <Route

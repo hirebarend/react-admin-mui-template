@@ -1,4 +1,4 @@
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Customer } from '../types';
 
@@ -6,7 +6,11 @@ export async function findCustomers(
   tenantId: string
 ): Promise<Array<Customer>> {
   const querySnapshot = await getDocs(
-    query(collection(db, 'customers'), where('tenantId', '==', tenantId))
+    query(
+      collection(db, 'customers'),
+      where('tenantId', '==', tenantId),
+      orderBy('emailAddress', 'asc')
+    )
   );
 
   const customers: Array<Customer> = querySnapshot.docs.map((x) => {

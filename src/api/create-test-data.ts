@@ -1,9 +1,12 @@
+import axios from 'axios';
+import { collection, deleteDoc, getDocs, query } from 'firebase/firestore';
+import { db } from '../firebase';
 import { Campaign, Customer, Referrer } from '../types';
 import { createCampaign } from './create-campaign';
 import { createConversion } from './create-conversion';
 import { createCustomer } from './create-customer';
 import { createReferrer } from './create-referrer';
-import { findCampaign } from './find-campaign';
+import { findCampaignByCode } from './find-campaign';
 import { findCustomerByEmailAddress } from './find-customer';
 import { findReferrer } from './find-referrer';
 
@@ -19,7 +22,7 @@ export async function createTestData() {
     });
   }
 
-  let campaign: Campaign | null = await findCampaign(tenantId, 'TWDJ1');
+  let campaign: Campaign | null = await findCampaignByCode(tenantId, 'TWDJ1');
 
   if (!campaign) {
     campaign = await createCampaign(tenantId, {
@@ -30,27 +33,48 @@ export async function createTestData() {
     });
   }
 
-  let customer: Customer | null = await findCustomerByEmailAddress(
-    tenantId,
-    'john.smith@example.com'
+  const response = await axios.get(
+    'https://randomuser.me/api?nat=gb&results=10'
   );
 
-  if (!customer) {
-    customer = await createCustomer(tenantId, {
-      emailAddress: 'john.smith@example.com',
-      firstName: 'John',
-      id: '',
-      lastName: 'Smith',
-    });
-  }
+  for (const x of response.data.results) {
+    let customer: Customer | null = await findCustomerByEmailAddress(
+      tenantId,
+      x.email
+    );
 
-  await createConversion(tenantId, {
-    campaign,
-    createdAt: new Date().toISOString(),
-    entity: customer.id,
-    id: '',
-    type: 'sign_up',
-  });
+    if (!customer) {
+      customer = await createCustomer(tenantId, {
+        emailAddress: x.email,
+        firstName: x.name.first,
+        id: '',
+        lastName: x.name.last,
+      });
+
+      await createConversion(tenantId, {
+        campaign,
+        createdAt: new Date().toISOString(),
+        createdAtUnix: new Date().getTime() / 1000,
+        entity: customer.id,
+        id: '',
+        type: 'sign_up',
+      });
+    }
+  }
 }
 
-createTestData();
+export async function deleteAllCollections() {
+  const collectionNames = ['campaigns', 'conversions', 'customers'];
+
+  for (const collectionName of collectionNames) {
+    const querySnapshot = await getDocs(query(collection(db, collectionName)));
+
+    for (const doc of querySnapshot.docs) {
+      await deleteDoc(doc.ref);
+    }
+  }
+}
+
+// deleteAllCollections().then(() => createTestData());
+
+// createTestData();
