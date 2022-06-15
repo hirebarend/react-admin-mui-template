@@ -36,7 +36,6 @@ export async function findConversionsMock(
       createdAt: new Date().toISOString(),
       entity,
       type: 'sign_up',
-      value: 1,
     },
   ];
 }

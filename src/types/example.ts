@@ -37,8 +37,6 @@ const conversion: Conversion = {
   entity: 'john.smith@example.com',
 
   type: 'sign_up',
-
-  value: 10,
 };
 
 console.log(referrer);

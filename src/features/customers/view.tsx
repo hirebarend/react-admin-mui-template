@@ -138,7 +138,6 @@ export function CustomersView() {
               <TableCell>Campaign</TableCell>
               <TableCell>Referrer</TableCell>
               <TableCell>Type</TableCell>
-              <TableCell>Value</TableCell>
               <TableCell>Created At</TableCell>
             </TableRow>
           </TableHead>
@@ -154,7 +153,6 @@ export function CustomersView() {
                   </TableCell>
                   <TableCell>{x.campaign.referrer.id}</TableCell>
                   <TableCell>{x.type}</TableCell>
-                  <TableCell>{x.value}</TableCell>
                   <TableCell>{moment(x.createdAt).format('llll')}</TableCell>
                 </TableRow>
               )

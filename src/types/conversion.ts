@@ -5,9 +5,9 @@ export type Conversion = {
 
   createdAt: string;
 
+  id: string;
+
   entity: string;
 
   type: string;
-
-  value: number;
 };

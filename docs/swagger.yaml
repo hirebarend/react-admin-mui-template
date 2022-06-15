@@ -1,0 +1,201 @@
+openapi: 3.0.1
+info:
+  title: Referral Stack API
+  description: Get more out of every customer with Referral Stack
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: support@referralstack.io
+  license:
+    name: MIT
+    url: https://github.com/hirebarend/react-admin-mui-template/blob/main/LICENSE
+  version: 0.1.0
+servers:
+  - url: https://api.referralstack.io/v1
+  - url: http://api.referralstack.io/v1
+tags:
+  - name: campaigns
+    description: Create, read, update and delete campaigns
+  - name: conversions
+    description: Create, read, update and delete conversions
+  - name: customers
+    description: Create, read, update and delete customers
+  - name: referrers
+    description: Create, read, update and delete referrers
+  - name: rewards
+    description: Create, read, update and delete rewards
+paths:
+  /campaigns/{referrerId}:
+    get:
+      tags:
+        - campaigns
+      summary: Get campaigns
+      operationId: get-campaigns
+      parameters:
+        - name: authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: referrerId
+          in: path
+          description: ID of referrer
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Page
+          required: false
+          schema:
+            type: number
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Campaign'
+        400:
+          description: Bad Request
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+    post:
+      tags:
+        - campaigns
+      summary: Create a campaign
+      operationId: create-a-campaign
+      parameters:
+        - name: authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: referrerId
+          in: path
+          description: ID of referrer
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Campaign object that needs to be created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CampaignRequest'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+        400:
+          description: Bad Request
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+    put:
+      tags:
+        - campaigns
+      summary: Update a campaign
+      operationId: update-a-campaign
+      parameters:
+        - name: authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: referrerId
+          in: path
+          description: ID of referrer
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Campaign object that needs to be updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CampaignRequest'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+        400:
+          description: Bad Request
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+components:
+  schemas:
+    Campaign:
+      type: object
+      properties:
+        code:
+          type: string
+          example: CD3FP
+        id:
+          type: string
+          example: TdlWP5Bu1WUxZ5dIBVyh
+        name:
+          type: string
+          example: Campaign 1
+        referrer:
+          $ref: '#/components/schemas/Referrer'
+      xml:
+        name: Campaign
+    CampaignRequest:
+      type: object
+      properties:
+        code:
+          type: string
+          example: CD3FP
+        id:
+          type: string
+          example: TdlWP5Bu1WUxZ5dIBVyh
+        name:
+          type: string
+          example: Campaign 1
+      xml:
+        name: Campaign
+    Conversion:
+      type: object
+      properties:
+        campaign:
+          $ref: '#/components/schemas/Campaign'
+        createdAt:
+          type: string
+          example: 2022-06-14T13:44:39.733Z
+        id:
+          type: string
+          example: TdlWP5Bu1WUxZ5dIBVyh
+        entity:
+          type: string
+          example: john.smith@example.com
+        type:
+          type: string
+          example: sign_up
+      xml:
+        name: Conversion
+    Referrer:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          example: 2022-06-14T13:44:39.733Z
+        id:
+          type: string
+          example: john.smith@example.com
+      xml:
+        name: Referrer

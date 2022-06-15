@@ -25,6 +25,7 @@ import {
   Webhooks,
   WebhooksCreate,
 } from './features';
+import { APP } from './configuration';
 
 export const THEME = createTheme({
   // palette: {
@@ -79,7 +80,7 @@ function App() {
               <Menu />
             </IconButton>
             <Typography component="div" noWrap variant="h6">
-              My App
+              {APP.name}
             </Typography>
           </Toolbar>
         </AppBar>
@@ -142,6 +143,21 @@ function App() {
                   <Dashboard />
                 </ListItemIcon>
                 <ListItemText primary="Customers" />
+              </ListItem>
+              <ListItem
+                button
+                onClick={() => {
+                  navigate('/rewards');
+
+                  if (isMobile) {
+                    setDrawerOpen(false);
+                  }
+                }}
+              >
+                <ListItemIcon>
+                  <Dashboard />
+                </ListItemIcon>
+                <ListItemText primary="Rewards" />
               </ListItem>
             </List>
             <Divider />
