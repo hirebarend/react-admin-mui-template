@@ -10,8 +10,7 @@ info:
     url: https://github.com/hirebarend/react-admin-mui-template/blob/main/LICENSE
   version: 0.1.0
 servers:
-  - url: https://api.referralstack.io/v1
-  - url: http://api.referralstack.io/v1
+  - url: https://api-referralstack-io.azurewebsites.net/api/v1
 tags:
   - name: campaigns
     description: Create, retrieve, update and delete campaigns
@@ -23,6 +22,8 @@ tags:
     description: Create, retrieve, update and delete referrers
   - name: rewards
     description: Create, retrieve, update and delete rewards
+  - name: webhooks
+    description: Create, retrieve, update and delete webhooks
 paths:
   /campaigns/{code}:
     get:
@@ -145,7 +146,7 @@ paths:
       tags:
         - campaigns
       summary: Retrieve campaigns
-      operationId: campaigns-retrieve-campaigns
+      operationId: referrer-retrieve-campaigns
       parameters:
         - name: authorization
           in: header
@@ -176,7 +177,7 @@ paths:
       tags:
         - campaigns
       summary: Create a campaign
-      operationId: campaigns-create-a-campaign
+      operationId: referrer-create-a-campaign
       parameters:
         - name: authorization
           in: header
@@ -213,7 +214,7 @@ paths:
       tags:
         - campaigns
       summary: Retrieve a campaign
-      operationId: campaigns-retrieve-a-campaign
+      operationId: referrer-retrieve-a-campaign
       parameters:
         - name: authorization
           in: header
@@ -247,7 +248,7 @@ paths:
       tags:
         - campaigns
       summary: Update a campaign
-      operationId: campaigns-update-a-campaign
+      operationId: referrer-update-a-campaign
       parameters:
         - name: authorization
           in: header
@@ -289,7 +290,7 @@ paths:
       tags:
         - conversions
       summary: Create a conversion
-      operationId: -conversionscreate-a-conversion
+      operationId: campaigns-create-a-conversion
       parameters:
         - name: authorization
           in: header
@@ -315,6 +316,90 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Conversion'
+        400:
+          description: Bad Request
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+  /webhooks:
+    get:
+      tags:
+        - webhooks
+      summary: Retrieve webhooks
+      operationId: webhooks-retrieve-webhooks
+      parameters:
+        - name: authorization
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Webhook'
+        400:
+          description: Bad Request
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+    post:
+      tags:
+        - webhooks
+      summary: Create a webhook
+      operationId: webhooks-create-a-webhook
+      parameters:
+        - name: authorization
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Webhook object that needs to be created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookRequest'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Webhook'
+        400:
+          description: Bad Request
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+  /webhooks/{id}:
+    delete:
+      tags:
+        - webhooks
+      summary: Delete a webhook
+      operationId: webhooks-delete-a-webhook
+      parameters:
+        - name: authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          description: No Content
         400:
           description: Bad Request
           content: {}
@@ -375,9 +460,6 @@ components:
     ConversionRequest:
       type: object
       properties:
-        createdAt:
-          type: string
-          example: 2022-06-14T13:44:39.733Z
         id:
           type: string
           example: 6e278fd8-562e-4435-8a9e-54c238bcd980
@@ -406,5 +488,33 @@ components:
         id:
           type: string
           example: cbc06676-e2b4-4e1f-9710-b2d4f9792753
+      xml:
+        name: Referrer
+    Webhook:
+      type: object
+      properties:
+        id:
+          type: string
+          example: cbc06676-e2b4-4e1f-9710-b2d4f9792753
+        name:
+          type: string
+          example: Webhook 1
+        status:
+          type: string
+          example: active
+        url:
+          type: string
+          example: https://httpbin.org/post
+      xml:
+        name: Referrer
+    WebhookRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Webhook 1
+        url:
+          type: string
+          example: https://httpbin.org/post
       xml:
         name: Referrer
