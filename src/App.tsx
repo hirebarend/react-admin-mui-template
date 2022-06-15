@@ -208,7 +208,7 @@ function App() {
                 <ListItemIcon>
                   <Dashboard />
                 </ListItemIcon>
-                <ListItemText primary="Tell a friend" />
+                <ListItemText primary="Refer a friend" />
               </ListItem>
             </List>
             <Divider />

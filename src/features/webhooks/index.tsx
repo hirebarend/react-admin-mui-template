@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { useMutation, useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import { deleteWebhook, findWebhooksMock } from '../../api';
+import { deleteWebhook, findWebhooks } from '../../api';
 import { Webhook } from '../../types';
 import { ConfirmationDialog } from '../../components';
 
@@ -27,7 +27,7 @@ export function Webhooks() {
 
   const useQueryResult = useQuery(
     'findWebhooks',
-    async () => await findWebhooksMock()
+    async () => await findWebhooks()
   );
 
   const useMutationResult = useMutation(

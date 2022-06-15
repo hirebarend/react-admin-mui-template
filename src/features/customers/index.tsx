@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import { findCustomersMock } from '../../api';
+import { findCustomers } from '../../api';
 import { Customer } from '../../types';
 import { Loader } from '../../components';
 
@@ -27,7 +27,7 @@ export function Customers() {
 
   const useQueryResultCustomers = useQuery(
     'findCustomers',
-    async () => await findCustomersMock(user?.sub || ''),
+    async () => await findCustomers(user?.sub || ''),
     {
       enabled: user ? true : false,
     }

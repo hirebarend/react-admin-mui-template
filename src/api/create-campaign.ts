@@ -3,12 +3,12 @@ import { db } from '../firebase';
 import { Campaign } from '../types';
 
 export async function createCampaign(
-  referrerId: string,
+  tenantId: string,
   campaign: Campaign
-): Promise<Campaign | null> {
+): Promise<Campaign> {
   const documentReference = await addDoc(collection(db, 'campaigns'), {
     ...campaign,
-    referrerId,
+    tenantId,
   });
 
   campaign.id = documentReference.id;

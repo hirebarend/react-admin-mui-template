@@ -36,6 +36,8 @@ const conversion: Conversion = {
 
   entity: 'john.smith@example.com',
 
+  id: 'de66f180-1ca8-4c8b-bad8-ba147fa2cb74',
+
   type: 'sign_up',
 };
 

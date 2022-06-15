@@ -3,6 +3,7 @@ import { db } from '../firebase';
 import { Conversion } from '../types';
 
 export async function findConversions(
+  tenantId: string,
   entity: string
 ): Promise<Array<Conversion>> {
   const querySnapshot = await getDocs(
@@ -17,25 +18,4 @@ export async function findConversions(
   });
 
   return conversions;
-}
-
-export async function findConversionsMock(
-  entity: string
-): Promise<Array<Conversion>> {
-  return [
-    {
-      campaign: {
-        code: '8563',
-        id: 'de66f180-1ca8-4c8b-bad8-ba147fa2cb74',
-        name: 'Campaign 1',
-        referrer: {
-          createdAt: new Date().toISOString(),
-          id: 'foo.bar@example.com',
-        },
-      },
-      createdAt: new Date().toISOString(),
-      entity,
-      type: 'sign_up',
-    },
-  ];
 }

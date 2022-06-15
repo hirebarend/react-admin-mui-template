@@ -5,7 +5,7 @@ import { Referrer } from '../types';
 export async function createReferrer(
   tenantId: string,
   referrer: Referrer
-): Promise<Referrer | null> {
+): Promise<Referrer> {
   const documentReference = await addDoc(collection(db, 'referrers'), {
     ...referrer,
     tenantId,

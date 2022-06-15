@@ -2,12 +2,12 @@ import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Campaign } from '../types';
 
-export async function findCampaigns(
+export async function findCampaign(
   tenantId: string,
-  referrerId: string
-): Promise<Array<Campaign>> {
+  code: string
+): Promise<Campaign | null> {
   const querySnapshot = await getDocs(
-    query(collection(db, 'campaigns'), where('referrerId', '==', referrerId))
+    query(collection(db, 'campaigns'), where('code', '==', code))
   );
 
   const campaigns: Array<Campaign> = querySnapshot.docs.map((x) => {
@@ -17,5 +17,9 @@ export async function findCampaigns(
     };
   });
 
-  return campaigns;
+  if (!campaigns.length) {
+    return null;
+  }
+
+  return campaigns[0];
 }

@@ -5,7 +5,7 @@ import { Webhook } from '../types';
 export async function createWebhook(
   tenantId: string,
   webhook: Webhook
-): Promise<Webhook | null> {
+): Promise<Webhook> {
   const documentReference = await addDoc(collection(db, 'webhooks'), {
     ...webhook,
     tenantId,

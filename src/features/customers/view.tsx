@@ -20,7 +20,7 @@ import {
 } from '@mui/material';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
-import { findConversionsMock, findCustomersMock } from '../../api';
+import { findConversions, findCustomer } from '../../api';
 // import { Customer } from '../../types';
 import { Loader } from '../../components';
 import { Conversion } from '../../types';
@@ -33,18 +33,19 @@ export function CustomersView() {
   console.log(params);
 
   const useQueryResultCustomer = useQuery(
-    'findCustomers[0]',
-    async () => (await findCustomersMock(user?.sub || ''))[0],
+    ['findCustomer', params.id],
+    async () => await findCustomer(user?.sub || '', params.id as string),
     {
       enabled: user ? true : false,
     }
   );
 
   const useQueryResultConversions = useQuery(
-    ['findConversions', useQueryResultCustomer.data?.emailAddress],
+    ['findConversions', user?.sub, useQueryResultCustomer.data?.emailAddress],
     async () =>
-      await findConversionsMock(
-        useQueryResultCustomer.data?.emailAddress || ''
+      await findConversions(
+        user?.sub || '',
+        useQueryResultCustomer.data?.id || ''
       ),
     {
       enabled: useQueryResultCustomer.data ? true : false,

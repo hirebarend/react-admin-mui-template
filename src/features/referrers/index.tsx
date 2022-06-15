@@ -16,7 +16,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useQuery } from 'react-query';
-import { findReferrersMock } from '../../api';
+import { findReferrers } from '../../api';
 import { Referrer } from '../../types';
 import { Loader } from '../../components';
 
@@ -25,7 +25,7 @@ export function Referrers() {
 
   const useQueryResultReferrers = useQuery(
     'findReferrers',
-    async () => await findReferrersMock(user?.sub || ''),
+    async () => await findReferrers(user?.sub || ''),
     {
       enabled: user ? true : false,
     }

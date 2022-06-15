@@ -14,40 +14,28 @@ servers:
   - url: http://api.referralstack.io/v1
 tags:
   - name: campaigns
-    description: Create, read, update and delete campaigns
+    description: Create, retrieve, update and delete campaigns
   - name: conversions
-    description: Create, read, update and delete conversions
+    description: Create, retrieve, update and delete conversions
   - name: customers
-    description: Create, read, update and delete customers
+    description: Create, retrieve, update and delete customers
   - name: referrers
-    description: Create, read, update and delete referrers
+    description: Create, retrieve, update and delete referrers
   - name: rewards
-    description: Create, read, update and delete rewards
+    description: Create, retrieve, update and delete rewards
 paths:
-  /campaigns/{referrerId}:
+  /referrer:
     get:
       tags:
-        - campaigns
-      summary: Get campaigns
-      operationId: get-campaigns
+        - referrers
+      summary: Retrieve referrers
+      operationId: retrieve-referrers
       parameters:
         - name: authorization
           in: header
           required: true
           schema:
             type: string
-        - name: referrerId
-          in: path
-          description: ID of referrer
-          required: true
-          schema:
-            type: string
-        - name: page
-          in: query
-          description: Page
-          required: false
-          schema:
-            type: number
       responses:
         200:
           description: OK
@@ -55,7 +43,100 @@ paths:
             application/json:
               schema:
                 type: array
-                items: 
+                items:
+                  $ref: '#/components/schemas/Referrer'
+        400:
+          description: Bad Request
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+    post:
+      tags:
+        - referrers
+      summary: Create a referrer
+      operationId: create-a-referrer
+      parameters:
+        - name: authorization
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Referrer object that needs to be created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReferrerRequest'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Referrer'
+        400:
+          description: Bad Request
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+  /referrer/{id}:
+    get:
+      tags:
+        - referrers
+      summary: Retrieve a referrer
+      operationId: retrieve-a-referrer
+      parameters:
+        - name: authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Referrer'
+        400:
+          description: Bad Request
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+  /referrer/{id}/campaigns:
+    get:
+      tags:
+        - campaigns
+      summary: Retrieve campaigns
+      operationId: retrieve-campaigns
+      parameters:
+        - name: authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
                   $ref: '#/components/schemas/Campaign'
         400:
           description: Bad Request
@@ -74,9 +155,8 @@ paths:
           required: true
           schema:
             type: string
-        - name: referrerId
+        - name: id
           in: path
-          description: ID of referrer
           required: true
           schema:
             type: string
@@ -87,6 +167,41 @@ paths:
             schema:
               $ref: '#/components/schemas/CampaignRequest'
         required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+        400:
+          description: Bad Request
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+  /referrer/{id}/campaigns/{code}:
+    get:
+      tags:
+        - campaigns
+      summary: Retrieve a campaign
+      operationId: retrieve-a-campaign
+      parameters:
+        - name: authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: OK
@@ -111,9 +226,13 @@ paths:
           required: true
           schema:
             type: string
-        - name: referrerId
+        - name: id
           in: path
-          description: ID of referrer
+          required: true
+          schema:
+            type: string
+        - name: code
+          in: path
           required: true
           schema:
             type: string
@@ -131,6 +250,43 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Campaign'
+        400:
+          description: Bad Request
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+  /campaigns/{code}/conversions:
+    post:
+      tags:
+        - conversions
+      summary: Create a conversion
+      operationId: create-a-conversion
+      parameters:
+        - name: authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Conversion object that needs to be created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConversionRequest'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conversion'
         400:
           description: Bad Request
           content: {}
@@ -188,6 +344,23 @@ components:
           example: sign_up
       xml:
         name: Conversion
+    ConversionRequest:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          example: 2022-06-14T13:44:39.733Z
+        id:
+          type: string
+          example: TdlWP5Bu1WUxZ5dIBVyh
+        entity:
+          type: string
+          example: john.smith@example.com
+        type:
+          type: string
+          example: sign_up
+      xml:
+        name: Conversion
     Referrer:
       type: object
       properties:
@@ -196,6 +369,14 @@ components:
           example: 2022-06-14T13:44:39.733Z
         id:
           type: string
-          example: john.smith@example.com
+          example: cbc06676-e2b4-4e1f-9710-b2d4f9792753
+      xml:
+        name: Referrer
+    ReferrerRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          example: cbc06676-e2b4-4e1f-9710-b2d4f9792753
       xml:
         name: Referrer

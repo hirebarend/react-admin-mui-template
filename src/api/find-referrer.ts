@@ -2,11 +2,16 @@ import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Referrer } from '../types';
 
-export async function findReferrers(
-  tenantId: string
-): Promise<Array<Referrer>> {
+export async function findReferrer(
+  tenantId: string,
+  id: string
+): Promise<Referrer | null> {
   const querySnapshot = await getDocs(
-    query(collection(db, 'referrers'), where('tenantId', '==', tenantId))
+    query(
+      collection(db, 'referrers'),
+      where('tenantId', '==', tenantId),
+      where('id', '==', id)
+    )
   );
 
   const referrers: Array<Referrer> = querySnapshot.docs.map((x) => {
@@ -15,5 +20,9 @@ export async function findReferrers(
     };
   });
 
-  return referrers;
+  if (!referrers.length) {
+    return null;
+  }
+
+  return referrers[0];
 }
