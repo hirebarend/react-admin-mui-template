@@ -363,7 +363,7 @@ components:
           example: 2022-06-14T13:44:39.733Z
         id:
           type: string
-          example: TdlWP5Bu1WUxZ5dIBVyh
+          example: 6e278fd8-562e-4435-8a9e-54c238bcd980
         entity:
           type: string
           example: john.smith@example.com
@@ -380,7 +380,7 @@ components:
           example: 2022-06-14T13:44:39.733Z
         id:
           type: string
-          example: TdlWP5Bu1WUxZ5dIBVyh
+          example: 6e278fd8-562e-4435-8a9e-54c238bcd980
         entity:
           type: string
           example: john.smith@example.com
