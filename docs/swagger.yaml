@@ -75,6 +75,11 @@ paths:
           required: false
           schema:
             type: string
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: number
       responses:
         200:
           description: OK
@@ -121,25 +126,32 @@ paths:
         401:
           description: Unauthorized
           content: {}
-  /referrer:
+  /referrers:
     get:
       tags:
         - referrers
       summary: Retrieve referrers
-      operationId: -referrers-retrieve-referrers
+      operationId: referrers-retrieve-referrers
       parameters:
         - name: authorization
           in: header
           required: true
           schema:
             type: string
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: number
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Referrer'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Referrer'
         400:
           description: Bad Request
           content: {}
@@ -181,7 +193,7 @@ paths:
     get:
       tags:
         - referrers
-      summary: -Retrieve a referrer
+      summary: Retrieve a referrer
       operationId: referrers-retrieve-a-referrer
       parameters:
         - name: authorization
@@ -224,6 +236,11 @@ paths:
           required: true
           schema:
             type: string
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: number
       responses:
         200:
           description: OK
