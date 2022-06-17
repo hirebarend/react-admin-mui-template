@@ -1,17 +1,20 @@
-import { addDoc, collection } from 'firebase/firestore';
-import { db } from '../firebase';
+import axios from 'axios';
+import { WebhookRequest } from '../request-types';
 import { Webhook } from '../types';
 
 export async function createWebhook(
-  tenantId: string,
-  webhook: Webhook
+  accessToken: string | null,
+  webhookRequest: WebhookRequest
 ): Promise<Webhook> {
-  const documentReference = await addDoc(collection(db, 'webhooks'), {
-    ...webhook,
-    tenantId,
-  });
+  const response = await axios.post<Webhook>(
+    'https://api-referralstack-io.azurewebsites.net/api/v1/webhooks',
+    webhookRequest,
+    {
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
 
-  webhook.id = documentReference.id;
-
-  return webhook;
+  return response.data;
 }

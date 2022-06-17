@@ -11,26 +11,30 @@ import { findCustomerByEmailAddress } from './find-customer';
 import { findReferrer } from './find-referrer';
 
 export async function createTestData() {
-  const tenantId: string = 'f8bda464edc9b041ad311e5806c24475';
+  const accessToken: string =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJnb29nbGUtb2F1dGgyfDEwMjg1NzE5MTU3ODI5ODk0NzgxOCJ9.bcjXs3eiRx846cwJBCUQe9Veuih0Co32PXDQGem9VRs';
 
-  let referrer: Referrer | null = await findReferrer(tenantId, 'c3bdcad669c0');
+  let referrer: Referrer | null = await findReferrer(
+    accessToken,
+    'c3bdcad669c0'
+  );
 
   if (!referrer) {
-    referrer = await createReferrer(tenantId, {
-      createdAt: new Date().toISOString(),
+    referrer = await createReferrer(accessToken, {
       id: 'c3bdcad669c0',
     });
   }
 
-  let campaign: Campaign | null = await findCampaignByCode(tenantId, 'TWDJ1');
+  let campaign: Campaign | null = await findCampaignByCode(
+    accessToken,
+    'TWDJ1'
+  );
 
   if (!campaign) {
-    campaign = await createCampaign(tenantId, {
+    campaign = await createCampaign(accessToken, referrer.id, {
       code: 'TWDJ1',
-      id: '',
       name: 'Campaign 1',
-      referrer,
-      type: ''
+      type: '',
     });
   }
 
@@ -40,22 +44,18 @@ export async function createTestData() {
 
   for (const x of response.data.results) {
     let customer: Customer | null = await findCustomerByEmailAddress(
-      tenantId,
+      accessToken,
       x.email
     );
 
     if (!customer) {
-      customer = await createCustomer(tenantId, {
+      customer = await createCustomer(accessToken, {
         emailAddress: x.email,
         firstName: x.name.first,
-        id: '',
         lastName: x.name.last,
       });
 
-      await createConversion(tenantId, {
-        campaign,
-        createdAt: new Date().toISOString(),
-        createdAtUnix: new Date().getTime() / 1000,
+      await createConversion(accessToken, campaign.code, {
         entity: customer.id,
         id: '6e278fd8-562e-4435-8a9e-54c238bcd980',
         type: 'sign_up',

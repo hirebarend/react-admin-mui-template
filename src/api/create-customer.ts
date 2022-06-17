@@ -1,17 +1,20 @@
-import { addDoc, collection } from 'firebase/firestore';
-import { db } from '../firebase';
-import {  Customer } from '../types';
+import axios from 'axios';
+import { CustomerRequest } from '../request-types';
+import { Customer } from '../types';
 
 export async function createCustomer(
-  tenantId: string,
-  customer: Customer
+  accessToken: string | null,
+  customerRequest: CustomerRequest
 ): Promise<Customer> {
-  const documentReference = await addDoc(collection(db, 'customers'), {
-    ...customer,
-    tenantId
-  });
+  const response = await axios.post<Customer>(
+    'https://api-referralstack-io.azurewebsites.net/api/v1/customers',
+    customerRequest,
+    {
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
 
-  customer.id = documentReference.id;
-
-  return customer;
+  return response.data;
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import {
   Box,
@@ -18,25 +18,32 @@ import { useMutation, useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { deleteWebhook, findWebhooks } from '../../api';
 import { ConfirmationDialog } from '../../components';
-import { getTenantId } from '../../functions';
 import { Webhook } from '../../types';
 
 export function Webhooks() {
-  const { user } = useAuth0();
+  const { getAccessTokenSilently, getIdTokenClaims } = useAuth0();
+
+  const [accessToken, setAccessToken] = useState(null as string | null);
+
+  useEffect(() => {
+    getAccessTokenSilently()
+      .then(() => getIdTokenClaims())
+      .then((x) => setAccessToken(x?.__raw || null));
+  }, []);
 
   const navigate = useNavigate();
 
   const useQueryResult = useQuery(
-    ['findWebhooks', getTenantId(user)],
-    async () => await findWebhooks(getTenantId(user)),
+    ['findWebhooks', accessToken],
+    async () => await findWebhooks(accessToken),
     {
-      enabled: user ? true : false,
+      enabled: accessToken ? true : false,
     }
   );
 
   const useMutationResult = useMutation(
     [],
-    (webhook: Webhook) => deleteWebhook(getTenantId(user), webhook.id),
+    (webhook: Webhook) => deleteWebhook(accessToken, webhook.id),
     {
       onSuccess: () => useQueryResult.refetch(),
     }

@@ -1,52 +1,45 @@
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from 'firebase/firestore';
-import { db } from '../firebase';
+import axios from 'axios';
 import { Customer } from '../types';
 
 export async function findCustomer(
-  tenantId: string,
+  accessToken: string | null,
   id: string
 ): Promise<Customer | null> {
-  const documentSnapshot = await getDoc(doc(db, 'customers', id));
+  try {
+    const response = await axios.get<Customer>(
+      `https://api-referralstack-io.azurewebsites.net/api/v1/customers/${id}`,
+      {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
 
-  if (!documentSnapshot.exists()) {
+    return response.data;
+  } catch {
     return null;
   }
-
-  return {
-    ...(documentSnapshot.data() as Customer),
-    id: documentSnapshot.id,
-  };
 }
 
 export async function findCustomerByEmailAddress(
-  tenantId: string,
+  accessToken: string | null,
   emailAddress: string
 ): Promise<Customer | null> {
-  const querySnapshot = await getDocs(
-    query(
-      collection(db, 'customers'),
-      where('tenantId', '==', tenantId),
-      where('emailAddress', '==', emailAddress)
-    )
+  const response = await axios.get<Array<Customer>>(
+    'https://api-referralstack-io.azurewebsites.net/api/v1/customers',
+    {
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+      params: {
+        emailAddress,
+      },
+    }
   );
 
-  const customers: Array<Customer> = querySnapshot.docs.map((x) => {
-    return {
-      ...(x.data() as Customer),
-      id: x.id,
-    };
-  });
-
-  if (!customers.length) {
+  if (!response.data.length) {
     return null;
   }
 
-  return customers[0];
+  return response.data[0];
 }

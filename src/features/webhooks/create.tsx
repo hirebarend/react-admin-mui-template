@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import {
   Box,
@@ -15,11 +15,18 @@ import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { createWebhook } from '../../api';
-import { getTenantId } from '../../functions';
 import { Webhook } from '../../types';
 
 export function WebhooksCreate() {
-  const { user } = useAuth0();
+  const { getAccessTokenSilently, getIdTokenClaims } = useAuth0();
+
+  const [accessToken, setAccessToken] = useState(null as string | null);
+
+  useEffect(() => {
+    getAccessTokenSilently()
+      .then(() => getIdTokenClaims())
+      .then((x) => setAccessToken(x?.__raw || null));
+  }, []);
 
   const {
     formState: { errors },
@@ -31,9 +38,9 @@ export function WebhooksCreate() {
 
   const useMutationResult = useMutation(
     [],
-    (webhook: Webhook) => createWebhook(getTenantId(user), webhook),
+    (webhook: Webhook) => createWebhook(accessToken, webhook),
     {
-      onSuccess: () => navigate('/webhooks'),
+      onSuccess: () => navigate('/app/webhooks'),
     }
   );
 

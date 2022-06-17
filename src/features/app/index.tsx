@@ -41,9 +41,10 @@ export function AppRoute() {
   useEffect(() => {
     (async () => {
       if (user && user.email && user.family_name && user.given_name) {
-        const tenantId: string = 'f8bda464edc9b041ad311e5806c24475';
+        const accessToken: string =
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJnb29nbGUtb2F1dGgyfDEwMjg1NzE5MTU3ODI5ODk0NzgxOCJ9.bcjXs3eiRx846cwJBCUQe9Veuih0Co32PXDQGem9VRs';
 
-        const apiClient = await getApiClient(tenantId);
+        const apiClient = await getApiClient(accessToken);
 
         const campaignCode: string | null =
           localStorage.getItem('campaignCode');

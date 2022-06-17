@@ -1,9 +1,15 @@
-import { deleteDoc, doc } from 'firebase/firestore';
-import { db } from '../firebase';
+import axios from 'axios';
 
 export async function deleteWebhook(
-  tenantId: string,
+  accessToken: string | null,
   id: string
 ): Promise<void> {
-  await deleteDoc(doc(db, 'webhooks', id));
+  await axios.delete(
+    `https://api-referralstack-io.azurewebsites.net/api/v1/webhooks/${id}`,
+    {
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
 }

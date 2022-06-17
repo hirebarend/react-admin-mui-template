@@ -7,7 +7,7 @@ import {
 } from '../api';
 import { Campaign, Customer } from '../types';
 
-export function getApiClient(tenantId: string) {
+export function getApiClient(accessToken: string | null) {
   return {
     createConversion: async (
       campaignCode: string,
@@ -17,7 +17,7 @@ export function getApiClient(tenantId: string) {
       type: string
     ) => {
       const campaign: Campaign | null = await findCampaignByCode(
-        tenantId,
+        accessToken,
         campaignCode
       );
 
@@ -26,23 +26,19 @@ export function getApiClient(tenantId: string) {
       }
 
       let customer: Customer | null = await findCustomerByEmailAddress(
-        tenantId,
+        accessToken,
         emailAddress
       );
 
       if (!customer) {
-        customer = await createCustomer(tenantId, {
+        customer = await createCustomer(accessToken, {
           emailAddress,
           firstName,
-          id: '',
           lastName,
         });
       }
 
-      await createConversion(tenantId, {
-        campaign,
-        createdAt: new Date().toISOString(),
-        createdAtUnix: new Date().getTime() / 1000,
+      await createConversion(accessToken, campaign.code, {
         entity: customer.id,
         id: `${new Md5()
           .appendStr(`${campaign.type}-${customer.emailAddress}-${type}`)

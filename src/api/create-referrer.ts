@@ -1,15 +1,20 @@
-import { addDoc, collection } from 'firebase/firestore';
-import { db } from '../firebase';
+import axios from 'axios';
+import { ReferrerRequest } from '../request-types';
 import { Referrer } from '../types';
 
 export async function createReferrer(
-  tenantId: string,
-  referrer: Referrer
+  accessToken: string | null,
+  referrerRequest: ReferrerRequest
 ): Promise<Referrer> {
-  await addDoc(collection(db, 'referrers'), {
-    ...referrer,
-    tenantId,
-  });
+  const response = await axios.post<Referrer>(
+    'https://api-referralstack-io.azurewebsites.net/api/v1/referrers',
+    referrerRequest,
+    {
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
 
-  return referrer;
+  return response.data;
 }

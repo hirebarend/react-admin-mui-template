@@ -1,18 +1,17 @@
-import { collection, getDocs, query, where } from 'firebase/firestore';
-import { db } from '../firebase';
+import axios from 'axios';
 import { Webhook } from '../types';
 
-export async function findWebhooks(tenantId: string): Promise<Array<Webhook>> {
-  const querySnapshot = await getDocs(
-    query(collection(db, 'webhooks'), where('tenantId', '==', tenantId))
+export async function findWebhooks(
+  accessToken: string | null
+): Promise<Array<Webhook>> {
+  const response = await axios.get<Array<Webhook>>(
+    'https://api-referralstack-io.azurewebsites.net/api/v1/webhooks',
+    {
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+    }
   );
 
-  const documents: Array<Webhook> = querySnapshot.docs.map((x) => {
-    return {
-      ...(x.data() as Webhook),
-      id: x.id,
-    };
-  });
-
-  return documents;
+  return response.data;
 }

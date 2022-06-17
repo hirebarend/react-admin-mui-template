@@ -58,6 +58,43 @@ paths:
         404:
           description: Not Found
           content: {}
+  /conversions:
+    get:
+      tags:
+        - conversions
+      summary: Retrieve conversions
+      operationId: conversions-retrieve-conversions
+      parameters:
+        - name: authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: entity
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: number
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Conversion'
+        400:
+          description: Bad Request
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
   /customers:
     get:
       tags:
@@ -189,7 +226,7 @@ paths:
         401:
           description: Unauthorized
           content: {}
-  /referrer/{id}:
+  /referrers/{id}:
     get:
       tags:
         - referrers
@@ -219,7 +256,7 @@ paths:
         401:
           description: Unauthorized
           content: {}
-  /referrer/{id}/campaigns:
+  /referrers/{id}/campaigns:
     get:
       tags:
         - campaigns
@@ -292,7 +329,7 @@ paths:
         401:
           description: Unauthorized
           content: {}
-  /referrer/{id}/campaigns/{code}:
+  /referrers/{id}/campaigns/{code}:
     get:
       tags:
         - campaigns

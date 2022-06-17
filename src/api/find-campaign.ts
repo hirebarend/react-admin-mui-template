@@ -1,29 +1,18 @@
-import { collection, getDocs, query, where } from 'firebase/firestore';
-import { db } from '../firebase';
+import axios from 'axios';
 import { Campaign } from '../types';
 
 export async function findCampaignByCode(
-  tenantId: string,
+  accessToken: string | null,
   code: string
 ): Promise<Campaign | null> {
-  const querySnapshot = await getDocs(
-    query(
-      collection(db, 'campaigns'),
-      where('tenantId', '==', tenantId),
-      where('code', '==', code)
-    )
+  const response = await axios.get<Campaign>(
+    `https://api-referralstack-io.azurewebsites.net/api/v1/campaigns/${code}`,
+    {
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+    }
   );
 
-  const campaigns: Array<Campaign> = querySnapshot.docs.map((x) => {
-    return {
-      ...(x.data() as Campaign),
-      id: x.id,
-    };
-  });
-
-  if (!campaigns.length) {
-    return null;
-  }
-
-  return campaigns[0];
+  return response.data;
 }

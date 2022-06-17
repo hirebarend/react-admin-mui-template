@@ -1,17 +1,21 @@
-import { addDoc, collection } from 'firebase/firestore';
-import { db } from '../firebase';
+import axios from 'axios';
+import { CampaignRequest } from '../request-types';
 import { Campaign } from '../types';
 
 export async function createCampaign(
-  tenantId: string,
-  campaign: Campaign
+  accessToken: string | null,
+  referrerId: string,
+  campaignRequest: CampaignRequest
 ): Promise<Campaign> {
-  const documentReference = await addDoc(collection(db, 'campaigns'), {
-    ...campaign,
-    tenantId,
-  });
+  const response = await axios.post<Campaign>(
+    `https://api-referralstack-io.azurewebsites.net/api/v1/referrers/${referrerId}/campaigns`,
+    campaignRequest,
+    {
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
 
-  campaign.id = documentReference.id;
-
-  return campaign;
+  return response.data;
 }
