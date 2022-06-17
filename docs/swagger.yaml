@@ -10,7 +10,7 @@ info:
     url: https://github.com/hirebarend/react-admin-mui-template/blob/main/LICENSE
   version: 0.1.0
 servers:
-  - url: https://api-referralstack-io.azurewebsites.net/api/v1
+  - url: https://api.referralstack.io/api/v1
 tags:
   - name: campaigns
     description: Create, retrieve, update and delete campaigns
