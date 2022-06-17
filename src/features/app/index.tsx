@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import {
   AppBar,
@@ -17,9 +17,10 @@ import {
 import { Dashboard, Menu } from '@mui/icons-material';
 import { useNavigate, Outlet } from 'react-router-dom';
 import { APP } from '../../configuration';
+import { getApiClient } from '../../api-client';
 
 export function AppRoute() {
-  const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
+  const { isAuthenticated, isLoading, loginWithRedirect, user } = useAuth0();
 
   const navigate = useNavigate();
 
@@ -36,6 +37,31 @@ export function AppRoute() {
 
     return <></>;
   }
+
+  useEffect(() => {
+    (async () => {
+      if (user && user.email && user.family_name && user.given_name) {
+        const tenantId: string = 'f8bda464edc9b041ad311e5806c24475';
+
+        const apiClient = await getApiClient(tenantId);
+
+        const campaignCode: string | null =
+          localStorage.getItem('campaignCode');
+
+        if (!campaignCode) {
+          return;
+        }
+
+        await apiClient.createConversion(
+          campaignCode,
+          user.given_name,
+          user.family_name,
+          user.email,
+          'sign_up'
+        );
+      }
+    })();
+  }, [user]);
 
   return (
     <>

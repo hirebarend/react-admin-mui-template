@@ -17,6 +17,8 @@ const campaign: Campaign = {
   name: 'Campaign 1',
 
   referrer,
+
+  type: 'sign_up',
 };
 
 const customer: Customer = {

@@ -30,6 +30,7 @@ export async function createTestData() {
       id: '',
       name: 'Campaign 1',
       referrer,
+      type: ''
     });
   }
 

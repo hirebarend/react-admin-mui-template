@@ -8,4 +8,6 @@ export type Campaign = {
   name: string;
 
   referrer: Referrer;
+
+  type: string;
 };

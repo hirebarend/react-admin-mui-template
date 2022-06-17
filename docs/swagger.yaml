@@ -55,6 +55,72 @@ paths:
         401:
           description: Unauthorized
           content: {}
+        404:
+          description: Not Found
+          content: {}
+  /customers:
+    get:
+      tags:
+        - customers
+      summary: Retrieve customers
+      operationId: customers-retrieve-customers
+      parameters:
+        - name: authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: emailAddress
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+        400:
+          description: Bad Request
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+    post:
+      tags:
+        - customers
+      summary: Create a customer
+      operationId: customers-create-a-customer
+      parameters:
+        - name: authorization
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Customer object that needs to be created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerRequest'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        400:
+          description: Bad Request
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
   /referrer:
     get:
       tags:
@@ -84,7 +150,7 @@ paths:
       tags:
         - referrers
       summary: Create a referrer
-      operationId: -referrerscreate-a-referrer
+      operationId: referrers-create-a-referrer
       parameters:
         - name: authorization
           in: header
@@ -420,6 +486,9 @@ components:
         name:
           type: string
           example: Campaign 1
+        type:
+          type: string
+          example: sign_up
         referrer:
           $ref: '#/components/schemas/Referrer'
       xml:
@@ -436,6 +505,9 @@ components:
         name:
           type: string
           example: Campaign 1
+        type:
+          type: string
+          example: sign_up
       xml:
         name: Campaign
     Conversion:
@@ -471,6 +543,37 @@ components:
           example: sign_up
       xml:
         name: Conversion
+    Customer:
+      type: object
+      properties:
+        emailAddress:
+          type: string
+          example: john.smith@example.com
+        firstName:
+          type: string
+          example: John
+        id:
+          type: string
+          example: TdlWP5Bu1WUxZ5dIBVyh
+        lastName:
+          type: string
+          example: Smith
+      xml:
+        name: Customer
+    CustomerRequest:
+      type: object
+      properties:
+        emailAddress:
+          type: string
+          example: john.smith@example.com
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Smith
+      xml:
+        name: Customer
     Referrer:
       type: object
       properties:

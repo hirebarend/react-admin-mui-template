@@ -44,9 +44,9 @@ export function getApiClient(tenantId: string) {
         createdAt: new Date().toISOString(),
         createdAtUnix: new Date().getTime() / 1000,
         entity: customer.id,
-        id: `${campaign.code}-${new Md5().appendStr(
-          customer.emailAddress
-        )}-${type}`,
+        id: `${new Md5()
+          .appendStr(`${campaign.type}-${customer.emailAddress}-${type}`)
+          .end()}`,
         type,
       });
     },
