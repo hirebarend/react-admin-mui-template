@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import moment from 'moment';
 import {
@@ -17,18 +17,25 @@ import {
 } from '@mui/material';
 import { useQuery } from 'react-query';
 import { findReferrers } from '../../api';
-import { getTenantId } from '../../functions';
 import { Referrer } from '../../types';
 import { Loader } from '../../components';
 
 export function Referrers() {
-  const { user } = useAuth0();
+  const { getAccessTokenSilently, getIdTokenClaims } = useAuth0();
+
+  const [accessToken, setAccessToken] = useState(null as string | null);
+
+  useEffect(() => {
+    getAccessTokenSilently()
+      .then(() => getIdTokenClaims())
+      .then((x) => setAccessToken(x?.__raw || null));
+  }, []);
 
   const useQueryResultReferrers = useQuery(
     'findReferrers',
-    async () => await findReferrers(getTenantId(user)),
+    async () => await findReferrers(accessToken),
     {
-      enabled: user ? true : false,
+      enabled: accessToken ? true : false,
     }
   );
 

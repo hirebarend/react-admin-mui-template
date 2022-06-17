@@ -1,25 +1,21 @@
-import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
-import { db } from '../firebase';
+import axios from 'axios';
 import { Conversion } from '../types';
 
 export async function findConversionsByEntity(
-  tenantId: string,
+  accessToken: string | null,
   entity: string
 ): Promise<Array<Conversion>> {
-  const querySnapshot = await getDocs(
-    query(
-      collection(db, 'conversions'),
-      where('tenantId', '==', tenantId),
-      where('entity', '==', entity),
-      orderBy('createdAtUnix', 'desc')
-    )
+  const response = await axios.get<Array<Conversion>>(
+    'https://api-referralstack-io.azurewebsites.net/api/v1/conversions',
+    {
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+      params: {
+        entity,
+      },
+    }
   );
 
-  const conversions: Array<Conversion> = querySnapshot.docs.map((x) => {
-    return {
-      ...(x.data() as Conversion),
-    };
-  });
-
-  return conversions;
+  return response.data;
 }

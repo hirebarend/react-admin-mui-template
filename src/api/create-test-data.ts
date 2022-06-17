@@ -1,6 +1,4 @@
 import axios from 'axios';
-import { collection, deleteDoc, getDocs, query } from 'firebase/firestore';
-import { db } from '../firebase';
 import { Campaign, Customer, Referrer } from '../types';
 import { createCampaign } from './create-campaign';
 import { createConversion } from './create-conversion';
@@ -64,20 +62,4 @@ export async function createTestData() {
   }
 }
 
-export async function deleteAllCollections() {
-  const collectionNames = ['campaigns', 'conversions', 'customers'];
-
-  for (const collectionName of collectionNames) {
-    const querySnapshot = await getDocs(query(collection(db, collectionName)));
-
-    for (const doc of querySnapshot.docs) {
-      await deleteDoc(doc.ref);
-    }
-  }
-}
-
-// deleteAllCollections().then(() => createTestData());
-
 // createTestData();
-
-// deleteAllCollections();

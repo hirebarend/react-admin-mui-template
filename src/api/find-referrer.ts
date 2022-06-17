@@ -1,28 +1,22 @@
-import { collection, getDocs, query, where } from 'firebase/firestore';
-import { db } from '../firebase';
+import axios from 'axios';
 import { Referrer } from '../types';
 
 export async function findReferrer(
-  tenantId: string,
+  accessToken: string | null,
   id: string
 ): Promise<Referrer | null> {
-  const querySnapshot = await getDocs(
-    query(
-      collection(db, 'referrers'),
-      where('tenantId', '==', tenantId),
-      where('id', '==', id)
-    )
-  );
+  try {
+    const response = await axios.get<Referrer>(
+      `https://api-referralstack-io.azurewebsites.net/api/v1/referrers/${id}`,
+      {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
 
-  const referrers: Array<Referrer> = querySnapshot.docs.map((x) => {
-    return {
-      ...(x.data() as Referrer),
-    };
-  });
-
-  if (!referrers.length) {
+    return response.data;
+  } catch {
     return null;
   }
-
-  return referrers[0];
 }

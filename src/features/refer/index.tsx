@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export function Refer() {
+  const navigate = useNavigate();
+
   const params = useParams();
 
   useEffect(() => {
@@ -10,6 +12,8 @@ export function Refer() {
     }
 
     localStorage.setItem('campaignCode', params.campaignCode);
+
+    navigate('/app');
   }, [params.campaignCode]);
 
   return <></>;

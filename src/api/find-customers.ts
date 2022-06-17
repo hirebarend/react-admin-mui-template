@@ -1,24 +1,17 @@
-import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
-import { db } from '../firebase';
+import axios from 'axios';
 import { Customer } from '../types';
 
 export async function findCustomers(
-  tenantId: string
+  accessToken: string | null
 ): Promise<Array<Customer>> {
-  const querySnapshot = await getDocs(
-    query(
-      collection(db, 'customers'),
-      where('tenantId', '==', tenantId),
-      orderBy('emailAddress', 'asc')
-    )
+  const response = await axios.get<Array<Customer>>(
+    'https://api-referralstack-io.azurewebsites.net/api/v1/customers',
+    {
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+    }
   );
 
-  const customers: Array<Customer> = querySnapshot.docs.map((x) => {
-    return {
-      ...(x.data() as Customer),
-      id: x.id,
-    };
-  });
-
-  return customers;
+  return response.data;
 }

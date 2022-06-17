@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import {
   Box,
@@ -19,18 +19,25 @@ import { useNavigate } from 'react-router-dom';
 import { findCustomers } from '../../api';
 import { Customer } from '../../types';
 import { Loader } from '../../components';
-import { getTenantId } from '../../functions';
 
 export function Customers() {
-  const { user } = useAuth0();
+  const { getAccessTokenSilently, getIdTokenClaims } = useAuth0();
+
+  const [accessToken, setAccessToken] = useState(null as string | null);
+
+  useEffect(() => {
+    getAccessTokenSilently()
+      .then(() => getIdTokenClaims())
+      .then((x) => setAccessToken(x?.__raw || null));
+  }, []);
 
   const navigate = useNavigate();
 
   const useQueryResultCustomers = useQuery(
     'findCustomers',
-    async () => await findCustomers(getTenantId(user)),
+    async () => await findCustomers(accessToken),
     {
-      enabled: user ? true : false,
+      enabled: accessToken ? true : false,
     }
   );
 

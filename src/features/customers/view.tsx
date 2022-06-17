@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import moment from 'moment';
 import {
@@ -21,33 +21,35 @@ import {
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import { findConversionsByEntity, findCustomer } from '../../api';
-// import { Customer } from '../../types';
 import { Loader } from '../../components';
-import { getTenantId } from '../../functions';
 import { Conversion } from '../../types';
 
 export function CustomersView() {
-  const { user } = useAuth0();
+  const { getAccessTokenSilently, getIdTokenClaims } = useAuth0();
+
+  const [accessToken, setAccessToken] = useState(null as string | null);
+
+  useEffect(() => {
+    getAccessTokenSilently()
+      .then(() => getIdTokenClaims())
+      .then((x) => setAccessToken(x?.__raw || null));
+  }, []);
 
   const params = useParams();
 
   const useQueryResultCustomer = useQuery(
     ['findCustomer', params.id],
-    async () => await findCustomer(getTenantId(user), params.id as string),
+    async () => await findCustomer(accessToken, params.id as string),
     {
-      enabled: user ? true : false,
+      enabled: accessToken ? true : false,
     }
   );
 
   const useQueryResultConversions = useQuery(
-    [
-      'findConversions',
-      getTenantId(user),
-      useQueryResultCustomer.data?.emailAddress,
-    ],
+    ['findConversions', accessToken, useQueryResultCustomer.data?.emailAddress],
     async () =>
       await findConversionsByEntity(
-        getTenantId(user),
+        accessToken,
         useQueryResultCustomer.data?.id || ''
       ),
     {
@@ -72,7 +74,7 @@ export function CustomersView() {
             mauris a libero interdum tincidunt sed et mi.
           </Typography>
         </Box>
-        <Button color="error" variant="contained">
+        <Button color="error" disabled={true} variant="contained">
           Delete
         </Button>
       </Stack>
@@ -84,11 +86,9 @@ export function CustomersView() {
               <FormControl fullWidth sx={{ marginBottom: '1rem' }}>
                 <TextField
                   disabled={true}
-                  // error={errors.name ? true : false}
                   InputLabelProps={{
                     shrink: true,
                   }}
-                  // inputProps={{ ...register('name', { required: true }) }}
                   label="Email Address"
                   variant="outlined"
                   value={useQueryResultCustomer.data.emailAddress}
@@ -101,11 +101,9 @@ export function CustomersView() {
               <FormControl fullWidth sx={{ marginBottom: '1rem' }}>
                 <TextField
                   disabled={true}
-                  // error={errors.name ? true : false}
                   InputLabelProps={{
                     shrink: true,
                   }}
-                  // inputProps={{ ...register('name', { required: true }) }}
                   label="First Name"
                   variant="outlined"
                   value={useQueryResultCustomer.data.firstName}
@@ -116,11 +114,9 @@ export function CustomersView() {
               <FormControl fullWidth sx={{ marginBottom: '1rem' }}>
                 <TextField
                   disabled={true}
-                  // error={errors.name ? true : false}
                   InputLabelProps={{
                     shrink: true,
                   }}
-                  // inputProps={{ ...register('name', { required: true }) }}
                   label="Last Name"
                   variant="outlined"
                   value={useQueryResultCustomer.data.lastName}

@@ -8,6 +8,7 @@ import {
   Home,
   Refer,
   Referrers,
+  SignOut,
   Webhooks,
   WebhooksCreate,
 } from './features';
@@ -42,6 +43,7 @@ function App() {
             path="customers/:id"
           ></Route>
           <Route element={<Referrers></Referrers>} path="referrers"></Route>
+          <Route element={<SignOut></SignOut>} path="sign-out"></Route>
           <Route element={<Webhooks></Webhooks>} path="webhooks"></Route>
           <Route
             element={<WebhooksCreate></WebhooksCreate>}

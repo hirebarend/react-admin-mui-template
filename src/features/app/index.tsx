@@ -16,8 +16,8 @@ import {
 } from '@mui/material';
 import { Dashboard, Menu } from '@mui/icons-material';
 import { useNavigate, Outlet } from 'react-router-dom';
+import { initialize, refer } from '../../api';
 import { APP } from '../../configuration';
-import { getApiClient } from '../../api-client';
 
 export function AppRoute() {
   const { isAuthenticated, isLoading, loginWithRedirect, user } = useAuth0();
@@ -41,10 +41,10 @@ export function AppRoute() {
   useEffect(() => {
     (async () => {
       if (user && user.email && user.family_name && user.given_name) {
-        const accessToken: string =
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJnb29nbGUtb2F1dGgyfDEwMjg1NzE5MTU3ODI5ODk0NzgxOCJ9.bcjXs3eiRx846cwJBCUQe9Veuih0Co32PXDQGem9VRs';
+        await initialize(user.email);
 
-        const apiClient = await getApiClient(accessToken);
+        const accessToken: string =
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJnb29nbGUtb2F1dGgyfDEwODQ1ODAxMzg2MjI2OTc4NTAyMSIsImF1ZCI6IklKUktiYzY5WkFUVjRnVElUM0VPemUxYVlCTWpQVXRGIn0.dOejLWxtO9q63I-oja_kkD-6Fai8smNHJeo9AJUYtdg';
 
         const campaignCode: string | null =
           localStorage.getItem('campaignCode');
@@ -53,13 +53,15 @@ export function AppRoute() {
           return;
         }
 
-        await apiClient.createConversion(
+        await refer(accessToken, {
           campaignCode,
-          user.given_name,
-          user.family_name,
-          user.email,
-          'sign_up'
-        );
+          emailAddress: user.email,
+          firstName: user.given_name,
+          lastName: user.family_name,
+          type: 'sign_up',
+        });
+
+        localStorage.removeItem('campaignCode');
       }
     })();
   }, [user]);
@@ -150,6 +152,7 @@ export function AppRoute() {
               </ListItem>
               <ListItem
                 button
+                disabled={true}
                 onClick={() => {
                   navigate('/app/rewards');
 
@@ -181,13 +184,29 @@ export function AppRoute() {
                 </ListItemIcon>
                 <ListItemText primary="Webhooks" />
               </ListItem>
+              <ListItem
+                button
+                disabled={true}
+                onClick={() => {
+                  navigate('/app');
+
+                  if (isMobile) {
+                    setDrawerOpen(false);
+                  }
+                }}
+              >
+                <ListItemIcon>
+                  <Dashboard />
+                </ListItemIcon>
+                <ListItemText primary="Settings" />
+              </ListItem>
             </List>
             <Divider />
             <List>
               <ListItem
                 button
                 onClick={() => {
-                  navigate('/app');
+                  window.open('https://developer.referralstack.io', '_blank');
 
                   if (isMobile) {
                     setDrawerOpen(false);
@@ -201,6 +220,7 @@ export function AppRoute() {
               </ListItem>
               <ListItem
                 button
+                disabled={true}
                 onClick={() => {
                   navigate('/app');
 
@@ -220,7 +240,7 @@ export function AppRoute() {
               <ListItem
                 button
                 onClick={() => {
-                  navigate('/app');
+                  navigate('/app/sign-out');
 
                   if (isMobile) {
                     setDrawerOpen(false);

@@ -13,3 +13,5 @@ export * from './find-customers';
 export * from './find-referrer';
 export * from './find-referrers';
 export * from './find-webhooks';
+export * from './initialize';
+export * from './refer';
